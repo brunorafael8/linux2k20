@@ -79,7 +79,7 @@ const Winners = (props: Props) => {
 
   const getTitle = () => ({
     commits: 'Usuários que mais criaram commits:',
-    additions: 'Usuários que mais criaram commits:',
+    additions: 'Usuários que mais adicionaram linhas de código:',
     deletions: 'Usuários que mais removeram linhas de código:',
     '': 'Usuários que mais criaram commits:',
   });
