@@ -45,31 +45,3 @@ yarn update
 yarn web
 
 ```
-
-## Build
-
-Server:
-
-```sh
-yarn build:server
-```
-
-Front-end:
-
-```sh
-yarn build:web
-```
-
-## Other Commands
-
-### Component Test
-
-```sh
-yarn component:test
-```
-
-### Lint
-
-```sh
-yarn lint
-```
