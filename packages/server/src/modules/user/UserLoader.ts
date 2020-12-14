@@ -42,7 +42,14 @@ export const load = async (context, id) => {
 };
 
 export const loadUsers = async (context, args) => {
-  const users = UserModel.find({}, { _id: 1 }).sort({ commitsCount: -1 });
+  const getSort = () => ({
+    commits: { commitsCount: -1 },
+    additions: { additions: -1 },
+    deletions: { deletions: -1 },
+    '': { commitsCount: -1 },
+  });
+
+  const users = UserModel.find({}, { _id: 1 }).sort(getSort()[args.rankType]);
 
   return connectionFromMongoCursor({
     cursor: users,

@@ -1,9 +1,24 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLEnumType, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { connectionArgs } from 'graphql-relay';
 
 import { NodeField } from '../interface/NodeInterface';
 import { UserLoader } from '../loader';
 import { UserConnection } from '../modules/user/UserType';
+
+const RankTypeEnumType = new GraphQLEnumType({
+  name: 'RankType',
+  values: {
+    COMMITS: {
+      value: 'commits',
+    },
+    ADDITIONS: {
+      value: 'additions',
+    },
+    DELETION: {
+      value: 'deletions',
+    },
+  },
+});
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -14,8 +29,8 @@ export default new GraphQLObjectType({
       type: UserConnection.connectionType,
       args: {
         ...connectionArgs,
-        search: {
-          type: GraphQLString,
+        rankType: {
+          type: GraphQLNonNull(RankTypeEnumType),
         },
       },
       resolve: (obj, args, context) => UserLoader.loadUsers(context, args),
