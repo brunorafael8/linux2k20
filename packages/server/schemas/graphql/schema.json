@@ -196,7 +196,7 @@
               "deprecationReason": null
             },
             {
-              "name": "DELETION",
+              "name": "DELETIONS",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null

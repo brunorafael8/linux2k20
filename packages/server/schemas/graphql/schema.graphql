@@ -32,7 +32,7 @@ type Query {
 enum RankType {
   COMMITS
   ADDITIONS
-  DELETION
+  DELETIONS
 }
 
 """Represents User"""
