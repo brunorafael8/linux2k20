@@ -1,3 +1,4 @@
+import getRepo from './services/getRepo';
 import mongoose from 'mongoose';
 
 import { databaseConfig } from './config';
@@ -33,6 +34,7 @@ export default function connectDatabase() {
         // eslint-disable-next-line no-console
         infos.map(info => console.log(`Connected to ${info.host}:${info.port}/${info.name}`));
         // Return successful promise
+        getRepo();
         resolve();
       });
 
