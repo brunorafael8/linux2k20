@@ -3,7 +3,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
-export type AppQueryVariables = {};
+export type RankType = "ADDITIONS" | "COMMITS" | "DELETIONS" | "%future added value";
+export type AppQueryVariables = {
+    rankType: RankType;
+};
 export type AppQueryResponse = {
     readonly users: {
         readonly edges: ReadonlyArray<{
@@ -25,8 +28,10 @@ export type AppQuery = {
 
 
 /*
-query AppQuery {
-  users(rankType: COMMITS) {
+query AppQuery(
+  $rankType: RankType!
+) {
+  users(rankType: $rankType) {
     edges {
       node {
         id
@@ -43,12 +48,19 @@ query AppQuery {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "rankType"
+  }
+],
+v1 = [
+  {
     "alias": null,
     "args": [
       {
-        "kind": "Literal",
+        "kind": "Variable",
         "name": "rankType",
-        "value": "COMMITS"
+        "variableName": "rankType"
       }
     ],
     "concreteType": "UserConnection",
@@ -114,35 +126,35 @@ var v0 = [
         "storageKey": null
       }
     ],
-    "storageKey": "users(rankType:\"COMMITS\")"
+    "storageKey": null
   }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "AppQuery",
-    "selections": (v0/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "AppQuery",
-    "selections": (v0/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "284b8e1a3ed2db1936df8a74c86b4dcd",
+    "cacheID": "ad963b6744f4845bf3e410ba0b7b6c14",
     "id": null,
     "metadata": {},
     "name": "AppQuery",
     "operationKind": "query",
-    "text": "query AppQuery {\n  users(rankType: COMMITS) {\n    edges {\n      node {\n        id\n        name\n        commitsCount\n        additions\n        deletions\n      }\n    }\n  }\n}\n"
+    "text": "query AppQuery(\n  $rankType: RankType!\n) {\n  users(rankType: $rankType) {\n    edges {\n      node {\n        id\n        name\n        commitsCount\n        additions\n        deletions\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'dd37afdcafa8b340b553753473336e01';
+(node as any).hash = '05b9ff9fbeec9cc5b80ec90a5e1102d7';
 export default node;

@@ -4,10 +4,9 @@ import { useLazyLoadQuery } from 'react-relay/hooks';
 import { graphql } from 'react-relay';
 import type { AppQuery } from './__generated__/AppQuery.graphql';
 
+import Winners from './components/Winners'
 import LogoImg from './assets/Logo.png';
-import FistPlaceImg from './assets/firstplace.png';
-import SecondPlaceImg from './assets/secondplace.png';
-import ThirdPlaceImg from './assets/thirdplace.png';
+
 
 const Container = styled.div`
   background-color: #e90052;
@@ -32,6 +31,8 @@ const Content = styled.main`
   display: flex;
   align-items: center;
   flex-direction: column;
+  overflow: auto;
+  padding: 0 20px;
 `;
 
 const Title = styled.h2`
@@ -43,87 +44,26 @@ const Title = styled.h2`
   margin-top: 44px;
 `;
 
-const Winners = styled.div`
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-`;
-
-const Place = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: Lato;
-font-style: normal;
-font-weight: 800;
-font-size: 18px;
-line-height: 22px;
-color: #FFFFFF;
-`;
-
-const PlaceImg = styled.img`
-  width: 100px;
-  height: 100px;
-  margin-top: 5px;
-`;
-
-const PlaceName = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 18px;
-  line-height: 21px;
-  margin-top: 14px;
-  color: #ffffff;
-`;
-
-const PlaceNumber = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
-  color: #ffffff;
-`;
-
 function App() {
-  const data = useLazyLoadQuery<AppQuery>(query, {});
-  const { edges } = data?.users;
-  console.log(edges);
+  const commits = useLazyLoadQuery<AppQuery>(query, {rankType: "COMMITS"});
+  const additions = useLazyLoadQuery<AppQuery>(query, {rankType: "ADDITIONS"});
+  const deletions = useLazyLoadQuery<AppQuery>(query, {rankType: "DELETIONS"});
   return (
     <Container>
       <Logo src={LogoImg} />
       <Content>
         <Title>Maiores Contribuidores</Title>
-        <Winners>
-          <Place>
-            2
-            <PlaceImg src={SecondPlaceImg} alt="FirstPlace" />
-            <PlaceName>{edges[1].node.name}</PlaceName>
-            <PlaceNumber>{edges[1].node.commitsCount} commits</PlaceNumber>
-          </Place>
-          <Place>
-            1
-            <PlaceImg src={FistPlaceImg} alt="FirstPlace" />
-            <PlaceName>{edges[0].node.name}</PlaceName>
-            <PlaceNumber>{edges[0].node.commitsCount} commits</PlaceNumber>
-          </Place>
-          <Place>
-            3
-            <PlaceImg src={ThirdPlaceImg} alt="FirstPlace" />
-            <PlaceName>{edges[2].node.name}</PlaceName>
-            <PlaceNumber>{edges[2].node.commitsCount} commits</PlaceNumber>
-          </Place>
-        </Winners>
+        <Winners data={commits?.users.edges} type="commits" /> 
+        <Winners data={additions?.users.edges} type="additions" /> 
+        <Winners data={deletions?.users.edges} type="deletions" /> 
       </Content>
     </Container>
   );
 }
 
 const query = graphql`
-  query AppQuery {
-    users(rankType: COMMITS) {
+  query AppQuery($rankType: RankType!) {
+    users(rankType: $rankType) {
       edges {
         node {
           id
