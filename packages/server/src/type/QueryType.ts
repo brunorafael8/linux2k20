@@ -14,7 +14,7 @@ const RankTypeEnumType = new GraphQLEnumType({
     ADDITIONS: {
       value: 'additions',
     },
-    DELETION: {
+    DELETIONS: {
       value: 'deletions',
     },
   },
