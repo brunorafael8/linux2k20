@@ -90,7 +90,7 @@ const PlaceNumber = styled.div`
 function App() {
   const data = useLazyLoadQuery<AppQuery>(query, {});
   const { edges } = data?.users;
-  console.log(edges[0]);
+  console.log(edges);
   return (
     <Container>
       <Logo src={LogoImg} />
@@ -123,7 +123,7 @@ function App() {
 
 const query = graphql`
   query AppQuery {
-    users {
+    users(rankType: COMMITS) {
       edges {
         node {
           id

@@ -26,7 +26,7 @@ export type AppQuery = {
 
 /*
 query AppQuery {
-  users {
+  users(rankType: COMMITS) {
     edges {
       node {
         id
@@ -44,7 +44,13 @@ const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "alias": null,
-    "args": null,
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "rankType",
+        "value": "COMMITS"
+      }
+    ],
     "concreteType": "UserConnection",
     "kind": "LinkedField",
     "name": "users",
@@ -108,7 +114,7 @@ var v0 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
+    "storageKey": "users(rankType:\"COMMITS\")"
   }
 ];
 return {
@@ -129,14 +135,14 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "9e59f202a62c1a83d220bcb13160e1b7",
+    "cacheID": "284b8e1a3ed2db1936df8a74c86b4dcd",
     "id": null,
     "metadata": {},
     "name": "AppQuery",
     "operationKind": "query",
-    "text": "query AppQuery {\n  users {\n    edges {\n      node {\n        id\n        name\n        commitsCount\n        additions\n        deletions\n      }\n    }\n  }\n}\n"
+    "text": "query AppQuery {\n  users(rankType: COMMITS) {\n    edges {\n      node {\n        id\n        name\n        commitsCount\n        additions\n        deletions\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '8b469f74d2131969515d80ef179fdce6';
+(node as any).hash = 'dd37afdcafa8b340b553753473336e01';
 export default node;
