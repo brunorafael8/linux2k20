@@ -22,6 +22,7 @@
         "graphql-playground-middleware-koa": "1.6.21",
         "graphql-relay": "0.6.0",
         "graphql-subscriptions": "^1.1.0",
+        "graphql.js": "^0.6.6",
         "isomorphic-fetch": "2.2.1",
         "kcors": "2.2.2",
         "koa": "2.11.0",
