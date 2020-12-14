@@ -1,9 +1,13 @@
 import mongoose, { Document, Model } from 'mongoose';
 
-const CommitSchema = new mongoose.Schema(
+const Schema = new mongoose.Schema(
   {
-    committedDate: {
+    name: {
       type: String,
+      required: true,
+    },
+    commitsCount: {
+      type: Number,
       required: true,
     },
     additions: {
@@ -15,32 +19,16 @@ const CommitSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { autoIndex: false },
-);
-
-const Schema = new mongoose.Schema(
-  {
-    login: {
-      type: String,
-      required: true,
-    },
-    commit: {
-      type: CommitSchema,
-      required: true,
-    },
-  },
   { timestamps: true },
 );
 
 export interface IUser extends Document {
-  login: string;
-  commit: {
-    committedDate: string;
-    additions: number;
-    deletions: number;
-  };
+  name: string;
+  commitsCount: number;
+  additions: number;
+  deletions: number;
 }
 
-const UserModel: Model<IUser> = mongoose.model('User', Schema);
+const UserModel: Model<IUser> = mongoose.models.User || mongoose.model('User', Schema);
 
 export default UserModel;

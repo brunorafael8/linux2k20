@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLObjectTypeConfig, GraphQLNonNull, GraphQLInt } from 'graphql';
+  import { GraphQLObjectType, GraphQLString, GraphQLObjectTypeConfig, GraphQLNonNull, GraphQLInt } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
 import { NodeInterface } from '../../interface/NodeInterface';
@@ -6,28 +6,9 @@ import { connectionDefinitions } from '../../connection/CustomConnectionType';
 
 import { GraphQLContext } from '../../TypeDefinition';
 
-
 import User from './UserLoader';
 
 type ConfigType = GraphQLObjectTypeConfig<User, GraphQLContext>;
-
-const CommitType = new GraphQLObjectType({
-  name: 'sizes',
-  fields: () => ({
-    committedDate: {
-      type: GraphQLString,
-      resolve: obj => obj.committedDate,
-    },
-    additions: {
-      type: GraphQLInt,
-      resolve: obj => obj.committedDate,
-    },
-    deletions: {
-      type: GraphQLInt,
-      resolve: obj => obj.committedDate,
-    },
-  }),
-});
 
 const UserTypeConfig: ConfigType = {
   name: 'User',
@@ -39,13 +20,21 @@ const UserTypeConfig: ConfigType = {
       description: 'MongoDB _id',
       resolve: user => user._id.toString(),
     },
-    login: {
+    name: {
       type: GraphQLString,
-      resolve: user => user.login,
+      resolve: user => user.name,
     },
-    commit: {
-      type: CommitType,
-      resolve: user => user.commit,
+    commitsCount: {
+      type: GraphQLInt,
+      resolve: user => user.commitsCount,
+    },
+    additions: {
+      type: GraphQLInt,
+      resolve: user => user.additions,
+    },
+    deletions: {
+      type: GraphQLInt,
+      resolve: user => user.deletions,
     },
   }),
   interfaces: () => [NodeInterface],
