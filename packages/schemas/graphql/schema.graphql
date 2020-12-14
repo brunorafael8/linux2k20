@@ -26,7 +26,13 @@ type Query {
     """The ID of an object"""
     id: ID!
   ): Node
-  users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  users(after: String, first: Int, before: String, last: Int, rankType: RankType!): UserConnection
+}
+
+enum RankType {
+  COMMITS
+  ADDITIONS
+  DELETION
 }
 
 """Represents User"""
