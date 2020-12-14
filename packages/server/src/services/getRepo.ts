@@ -1,21 +1,16 @@
-import graphql from 'graphql.js';
+import dotenv from 'dotenv';
+
+import { countCommit, countAdditions, countDeletions } from './../helpers/countData';
 import RepositoryModel from '../modules/repository/RepositoryModel';
 import UserModel from '../modules/user/UserModel';
 
-import dotenv from 'dotenv';
+import { graph } from './graphqlClient';
+
 dotenv.config();
 
-var graph = graphql('https://api.github.com/graphql', {
-  headers: {
-    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-    'User-Agent': 'linux2k20',
-  },
-  asJSON: true,
-});
-
-const getRepo = async () => {
+export const getRepo = async () => {
   let commits = [];
-  let repoName;
+  let repoName = '';
   let repository = await RepositoryModel.find({ name: 'linux' });
 
   let endCursor = repository[0]?.endCursor;
@@ -56,7 +51,7 @@ const getRepo = async () => {
               }
             }      
           }
-      }
+        }
   `)({
       name: 'linux',
       owner: 'torvalds',
@@ -74,7 +69,6 @@ const getRepo = async () => {
       .catch(function(error) {
         console.log(error);
       });
-    console.log(commits.length);
 
     await RepositoryModel.findOneAndUpdate(
       { name: repoName },
@@ -85,9 +79,8 @@ const getRepo = async () => {
   return standardCompetitionScoring(commits);
 };
 
-async function ChekingNewData(totalCount) {
-  let NewTotalCount;
-  console.log('asuashu');
+const ChekingNewData = async totalCount => {
+  let NewTotalCount = 0;
   await graph(`
   query repo($name: String!, $owner: String!){
       repository(name:$name, owner:$owner){
@@ -101,7 +94,7 @@ async function ChekingNewData(totalCount) {
           }
         }
       }
-  }
+    }
 `)({
     name: 'linux',
     owner: 'torvalds',
@@ -110,8 +103,6 @@ async function ChekingNewData(totalCount) {
       const { repository } = response;
       const { object } = repository;
       const { history } = object;
-      console.log(history.totalCount, 'asah');
-      console.log(totalCount, 'asah');
       NewTotalCount = history.totalCount;
     })
     .catch(function(error) {
@@ -119,73 +110,20 @@ async function ChekingNewData(totalCount) {
     });
 
   return NewTotalCount === totalCount;
-}
+};
 
-function standardCompetitionScoring(commits) {
-  // Count the number of commits by each user
-  UserModel.remove({});
-  const countsCommit = commits.reduce((acc, cur) => {
-    const user = cur.author?.user?.login;
-    if (acc[user]) {
-      if (acc[user].indexOf(cur.oid) === -1) {
-        acc[user].push(cur.oid);
-      }
-    } else {
-      acc[user] = [cur.oid];
-    }
-    return acc;
-  }, {});
+const standardCompetitionScoring = commits => {
+  const countedCommitsPerUser = countCommit(commits);
+  const usersWithCountAddition = countAdditions(commits);
+  const usersWithCountDeletions = countDeletions(commits);
 
-  const usersWithCountCommit = {};
-  Object.keys(countsCommit).forEach(user => {
-    const count = countsCommit[user].length;
-    usersWithCountCommit[count] = usersWithCountCommit[count] + 1 || 1;
-  });
-
-  const countAdditions = commits.reduce((acc, cur) => {
-    const user = cur.author?.user?.login;
-    if (acc[user]) {
-      if (acc[user].indexOf(cur.oid) === -1) {
-        acc[user].push(cur.additions);
-      }
-    } else {
-      acc[user] = [cur.additions];
-    }
-    return acc;
-  }, {});
-
-  const usersWithCountAddition = {};
-
-  Object.keys(countAdditions).forEach(user => {
-    const count = countAdditions[user];
-    usersWithCountAddition[user] = count.reduce((a, b) => a + b, 0);
-  });
-
-  const countDeletions = commits.reduce((acc, cur) => {
-    const user = cur.author?.user?.login;
-    if (acc[user]) {
-      if (acc[user].indexOf(cur.oid) === -1) {
-        acc[user].push(cur.deletions);
-      }
-    } else {
-      acc[user] = [cur.deletions];
-    }
-    return acc;
-  }, {});
-
-  const usersWithCountDeletions = {};
-
-  Object.keys(countDeletions).forEach(user => {
-    const count = countDeletions[user];
-    usersWithCountDeletions[user] = count.reduce((a, b) => a + b, 0);
-  });
-
-  const sortedUsers = Object.keys(countsCommit).sort((a, b) => countsCommit[b].length - countsCommit[a].length);
+  const sortedUsers = Object.keys(countedCommitsPerUser).sort(
+    (a, b) => countedCommitsPerUser[b].length - countedCommitsPerUser[a].length,
+  );
   return sortedUsers.map(name => {
-    const n = countsCommit[name].length;
+    const n = countedCommitsPerUser[name].length;
     const additions = usersWithCountAddition[name];
     const deletions = usersWithCountDeletions[name];
-    console.log('foi');
     return UserModel.create({
       name,
       commitsCount: n,
@@ -193,6 +131,4 @@ function standardCompetitionScoring(commits) {
       deletions,
     });
   });
-}
-
-export default getRepo;
+};

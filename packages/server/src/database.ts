@@ -1,4 +1,4 @@
-import getRepo from './services/getRepo';
+import { getRepo } from './services/getRepo';
 import mongoose from 'mongoose';
 
 import { databaseConfig } from './config';
