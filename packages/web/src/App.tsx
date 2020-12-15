@@ -15,12 +15,18 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media(max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 
 const Logo = styled.img`
   width: 189px;
   height: 156px;
   margin-right: 200px;
+  @media(max-width: 800px) {
+    margin: 0 0 20px 0;
+  }
 `;
 
 const Content = styled.main`
@@ -33,6 +39,9 @@ const Content = styled.main`
   flex-direction: column;
   overflow: auto;
   padding: 0 20px;
+  @media(max-width: 800px) {
+    width: 80%;
+  }
 `;
 
 const Title = styled.h2`

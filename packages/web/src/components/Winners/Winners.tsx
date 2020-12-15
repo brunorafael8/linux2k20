@@ -43,6 +43,10 @@ const PlaceImg = styled.img<{ place?: string }>`
   width: ${({ place }) => (place === '1' ? '100px' : '85px')};
   height: ${({ place }) => (place === '1' ? '100px' : '85px')};
   margin-top: 5px;
+  @media (max-width: 800px) {
+    width: ${({ place }) => (place === '1' ? '80px' : '65px')};
+    height: ${({ place }) => (place === '1' ? '80px' : '65px')};
+  }
 `;
 
 const PlaceName = styled.div`
@@ -53,6 +57,9 @@ const PlaceName = styled.div`
   line-height: 21px;
   margin-top: 14px;
   color: #ffffff;
+  @media (max-width: 800px) {
+    font-size: 14px;
+  }
 `;
 
 const PlaceNumber = styled.div`
@@ -62,15 +69,22 @@ const PlaceNumber = styled.div`
   font-size: 18px;
   line-height: 21px;
   color: #ffffff;
+  @media (max-width: 800px) {
+    font-size: 12px;
+    text-align: center;
+  }
 `;
 
-interface Props {
-  data: Array<{
+interface NodeProp {
+  node: {
     name: string;
     commitsCount: number;
     additions: number;
     deletions: number;
-  }>;
+  };
+}
+interface Props {
+  data: Array<NodeProp>;
   type: string;
 }
 
